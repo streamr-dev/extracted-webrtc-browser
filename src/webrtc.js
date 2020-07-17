@@ -103,27 +103,34 @@ export default class WebRTC extends React.Component {
             }
         }
         connection.oniceconnectionstatechange = (event) => {
-            // console.log('oniceconnectionstatechange', nodeId, targetPeerId, event)
             if (connection.iceConnectionState === 'failed') {
                 this.setState({ failedIceConnectionCount: this.state.failedIceConnectionCount += 1 })
             }
         }
+
         dataChannel.onopen = (event) => {
-            console.log('dataChannel.onOpen', nodeId, targetPeerId, event)
             this.setState({ dataChannelsOpened: this.state.dataChannelsOpened += 1 })
             this.nodes[nodeId].readyChannels.add(dataChannel)
-
         }
+
         dataChannel.onclose = (event) => {
             this.setState({ dataChannelsClosed: this.state.dataChannelsClosed += 1 })
+            delete this.nodes[nodeId].dataChannels[targetPeerId]
+            this.nodes[nodeId].readyChannels.delete(targetPeerId)
+            this.nodes[nodeId].connections[targetPeerId].close()
+            delete this.nodes[nodeId].connections[targetPeerId]
+
         }
+
         dataChannel.onerror = (event) => {
             console.log('dataChannel.onError', nodeId, targetPeerId, event)
             console.warn(event)
         }
+
         dataChannel.onmessage = (event) => {
             this.setState({ receivedMessageCount: this.state.receivedMessageCount += 1} )
         }
+
         this.nodes[nodeId].connections[targetPeerId] = connection
         this.nodes[nodeId].dataChannels[targetPeerId] = dataChannel
     }
@@ -179,7 +186,7 @@ export default class WebRTC extends React.Component {
                     publishInterval: this.publish(nodeId)
                 }
                 this.setState({ buttonText: 'Starting.. ' + i })
-                await this.sleep(150)
+                await this.sleep(200)
             } catch (e) {
                 console.error(e)
             }
