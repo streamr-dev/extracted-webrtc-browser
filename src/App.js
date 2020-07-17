@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import WebRTC from './webrtc.js'
 import randomstring from 'randomstring'
 function App() {
