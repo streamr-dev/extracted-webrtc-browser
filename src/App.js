@@ -1,26 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-
+import WebRTC from './webrtc.js'
+import randomstring from 'randomstring'
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const browserId = randomstring.generate(12)
+    return (
+        <div>
+            <h1>
+                webRTC browser test
+            </h1>
+            <WebRTC signaller={'ws://127.0.0.1:8080'} browserId={ browserId } stunUrls={['stun:stun.l.google.com:19302']}/>
+        </div>
+    )
 }
 
 export default App;
