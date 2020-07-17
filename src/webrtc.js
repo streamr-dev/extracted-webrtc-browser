@@ -18,10 +18,6 @@ export default class WebRTC extends React.Component {
         this.signallerWs = null
     }
 
-    componentDidMount() {
-
-    }
-
     setUpSignallerConnection(browserId) {
         this.signallerWs = new WebSocket(this.props.signaller + '/?browserId=' + browserId)
         this.signallerWs.onopen = () => {
@@ -102,43 +98,32 @@ export default class WebRTC extends React.Component {
             }
         }
         connection.onconnectionstatechange = (event) => {
-            // console.log('onconnectionstatechange', nodeId, targetPeerId, connection.connectionState, event)
             if (connection.connectionState === 'failed') {
-                this.setState({failedConnectionCount: this.state.failedConnectionCount += 1})
+                this.setState({ failedConnectionCount: this.state.failedConnectionCount += 1 })
             }
-        }
-        connection.onsignalingstatechange = (event) => {
-            // console.log('onsignalingstatechange', nodeId, targetPeerId, connection.connectionState, event)
         }
         connection.oniceconnectionstatechange = (event) => {
             // console.log('oniceconnectionstatechange', nodeId, targetPeerId, event)
             if (connection.iceConnectionState === 'failed') {
-                this.setState({failedIceConnectionCount: this.state.failedIceConnectionCount += 1})
+                this.setState({ failedIceConnectionCount: this.state.failedIceConnectionCount += 1 })
             }
         }
-        connection.onicegatheringstatechange = (event) => {
-            // console.log('onicegatheringstatechange', nodeId, targetPeerId, event)
-        }
         dataChannel.onopen = (event) => {
-            // console.log('dataChannel.onOpen', nodeId, targetPeerId, event)
-            this.setState({dataChannelsOpened: this.state.dataChannelsOpened += 1})
+            console.log('dataChannel.onOpen', nodeId, targetPeerId, event)
+            this.setState({ dataChannelsOpened: this.state.dataChannelsOpened += 1 })
             this.nodes[nodeId].readyChannels.add(dataChannel)
 
         }
         dataChannel.onclose = (event) => {
-            // console.log('dataChannel.onClose', nodeId, targetPeerId, event)
-            this.setState({dataChannelsClosed: this.state.dataChannelsClosed += 1})
+            this.setState({ dataChannelsClosed: this.state.dataChannelsClosed += 1 })
         }
         dataChannel.onerror = (event) => {
-            // console.log('dataChannel.onError', nodeId, targetPeerId, event)
+            console.log('dataChannel.onError', nodeId, targetPeerId, event)
             console.warn(event)
         }
         dataChannel.onmessage = (event) => {
-            // console.log('dataChannel.onmessage', nodeId, targetPeerId, event.data)
-            // const object = JSON.parse(event.data)
-            this.setState({receivedMessageCount: this.state.receivedMessageCount += 1})
+            this.setState({ receivedMessageCount: this.state.receivedMessageCount += 1} )
         }
-
         this.nodes[nodeId].connections[targetPeerId] = connection
         this.nodes[nodeId].dataChannels[targetPeerId] = dataChannel
     }
@@ -172,8 +157,7 @@ export default class WebRTC extends React.Component {
                 } else {
                     this.waitForSocketConnection(socket, callback);
                 }
-
-            }, 5); // wait 5 milisecond for the connection...
+            }, 5);
     }
 
     handleChange(event) {
@@ -194,14 +178,14 @@ export default class WebRTC extends React.Component {
                     readyChannels: new Set(),
                     publishInterval: this.publish(nodeId)
                 }
-                this.setState({buttonText: 'Starting.. ' + i})
+                this.setState({ buttonText: 'Starting.. ' + i })
                 await this.sleep(150)
             } catch (e) {
                 console.error(e)
             }
 
         }
-        this.setState({running: true})
+        this.setState({ running: true })
     }
 
     handleDisconnects() {
@@ -256,35 +240,35 @@ export default class WebRTC extends React.Component {
         return (
             <div>
                 { this.state.running === false ?
-                    <form onSubmit={this.handleConnects.bind(this)}>
+                    <form onSubmit={ this.handleConnects.bind(this) }>
                         <label htmlFor="new-todo">
                             How many peer connections to run?
                         </label>
                         <input type="text" pattern="[0-9]*"
-                               onChange={this.handleChange.bind(this)} value={this.state.nodeCount}/>
+                               onChange={ this.handleChange.bind(this) } value={ this.state.nodeCount }/>
                         <button>
-                            {this.state.buttonText}
+                            { this.state.buttonText }
                         </button>
                     </form>
                     :
                     <div>
-                        <button onClick={this.handleDisconnects.bind(this)}>
+                        <button onClick={ this.handleDisconnects.bind(this) }>
                             Disconnect nodes
                         </button>
                         <p>
-                            DataChannels opened: {this.state.dataChannelsOpened}
+                            DataChannels opened: { this.state.dataChannelsOpened }
                         </p>
                         <p>
-                            DataChannels closed: {this.state.dataChannelsClosed}
+                            DataChannels closed: { this.state.dataChannelsClosed }
                         </p>
                         <p>
-                            Total received messages: {this.state.receivedMessageCount}
+                            Total received messages: { this.state.receivedMessageCount }
                         </p>
                         <p>
-                            Failed connections: {this.state.failedConnectionCount}
+                            Failed connections: { this.state.failedConnectionCount }
                         </p>
                         <p>
-                            Failed ice connections: {this.state.failedIceConnectionCount}
+                            Failed ice connections: { this.state.failedIceConnectionCount }
                         </p>
                     </div>
                 }

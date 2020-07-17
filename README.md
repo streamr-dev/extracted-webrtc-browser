@@ -21,7 +21,7 @@ Then start the react app locally with:
 npm start
 ```
 
-## Using
+## Usage
 
 Open http://localhost:3000 with two browsers. After the pages are open and the server is running run desired amount of
 webRTC connection endpoints on both browsers. The signaller will only connect peers of separate browsers or tabs with
