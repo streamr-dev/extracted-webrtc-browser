@@ -25,4 +25,4 @@ npm start
 
 Open http://localhost:3000 with two browsers. After the pages are open and the server is running run desired amount of
 webRTC connection endpoints on both browsers. The signaller will only connect peers of separate browsers or tabs with
-one another. The upper limit of Chrome for WebRTC PeerConnections is 256.
+one another. Currently this repository is able to run atleast 400 stable webRTC connections between two browsers.
